@@ -26,7 +26,7 @@ UPLOAD_FOLDER ='static/uploads/'
 DOWNLOAD_FOLDER = 'static/downloads/'
 ALLOWED_EXTENSIONS = {'jpg', 'png','.jpeg'}
 
-lineaccesstoken = ''
+lineaccesstoken = 'AknZwMxlr+cznjF3+BnAw/NToQFz2czSnUsHJSmj8XGrhghaoWvXUjTtnUpivnNesjB1W7jVVmDHPKVkyiSW6uQdOTNDsMKeEZuEWG7GNmAj3G3bFVtLVMxGGRxLRP29UL1Ia3ajFhvMVbRAamUKFgdB04t89/1O/w1cDnyilFU='
 
 line_bot_api = LineBotApi(lineaccesstoken)
 
@@ -126,7 +126,7 @@ def reply(intent,text,reply_token,id,disname):
 
 def event_handle(event,json_line):
     print(event)
-    try: 
+    try:
         userId = event['source']['userId']
     except:
         print('error cannot get userId')
@@ -147,19 +147,28 @@ def event_handle(event,json_line):
         line_bot_api.reply_message(rtoken, replyObj)
         return ''
 
-    if msgType == "text":       
+    if msgType == "text":
         msg = str(event["message"]["text"])
         if msg == "สวัสดี":
-            replyObj = TextSendMessage(text="ดีด้วย")
-            line_bot_api.reply_message(rtoken,replyObj)
-        elif msg == "กินข้าวไหม":
-            replyObj = TextSendMessage(text="ไม่ล่ะ กินแล้ว")
-            line_bot_api.reply_message(rtoken,replyObj)
-        else :   
+            replyObj = TextSendMessage(text="สวัสดีจ้ะ")
+            line_bot_api.reply_message(rtoken, replyObj)
+        elif msg == "ทำอะไรอยู่":
+            replyObj = TextSendMessage(text="ปลูกต้นไม้")
+            line_bot_api.reply_message(rtoken, replyObj)
+        elif msg == "กินข้าวมั้ย":
+            replyObj = TextSendMessage(text="ไม่ล่ะ")
+            line_bot_api.reply_message(rtoken, replyObj)
+        elif msg == "covid" :
+            url = "https://covid19.ddc.moph.go.th/api/Cases/today-cases-all"
+            response = requests.get(url)
+            response = response.json()
+            replyObj = TextSendMessage(text=str(response))
+            line_bot_api.reply_message(rtoken, replyObj)
+        else :
             headers = request.headers
             json_headers = ({k:v for k, v in headers.items()})
             json_headers.update({'Host':'bots.dialogflow.com'})
-            url = ""
+            url = "https://dialogflow.cloud.google.com/v1/integrations/line/webhook/dea5e273-5762-4e74-98c0-2e28cf6f61f5"
             requests.post(url,data=json_line, headers=json_headers)
     elif msgType == "image":
         try:
